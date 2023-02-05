@@ -1,40 +1,30 @@
+import axios from "axios";
+
 const Tabs = (topics) => {
-  // TASK 3
-  // ---------------------
-  // Implement this function which takes an array of strings ("topics") as its only argument.
-  // As an example, if the topics passed are ['javascript', 'bootstrap', 'technology']
-  // then the function returns the markup below.
-  // The tags used, the hierarchy of elements and their attributes must match the provided markup!
-  // The text inside elements will be set using their `textContent` property (NOT `innerText`).
-  //
-  // <div class="topics">
-  //   <div class="tab">javascript</div>
-  //   <div class="tab">bootstrap</div>
-  //   <div class="tab">technology</div>
-  // </div>
-  //
   const topicWrapper = document.createElement("div");
-  const javascriptWrap = document.createElement("div");
-  const bootstrapWrap = document.createElement("div");
-  const technologyWrap = document.createElement("div");
-
-  javascriptWrap.textContent = "javascript";
-  bootstrapWrap.textContent = "bootstrap";
-  technologyWrap.textContent = "technology";
-
   topicWrapper.classList.add("topics");
-  javascriptWrap.classList.add("tab");
-  bootstrapWrap.classList.add("tab");
-  technologyWrap.classList.add("tab");
-
-  topicWrapper.appendChild(javascriptWrap);
-  topicWrapper.appendChild(bootstrapWrap);
-  topicWrapper.appendChild(technologyWrap);
-
+  for (let topic of topics) topicWrapper.appendChild(Tab(topic));
   return topicWrapper;
 };
 
+const Tab = (topic) => {
+  const tabElement = document.createElement("div");
+  tabElement.classList.add("tab");
+  tabElement.textContent = topic;
+  return tabElement;
+};
+
+const getTopics = () => {
+  return axios
+    .get(`http://localhost:5001/api/topics`)
+    .then((res) => res.data.topics);
+};
+
 const tabsAppender = (selector) => {
+  getTopics().then((topics) =>
+    document.querySelector(selector).appendChild(Tabs(topics))
+  );
+
   // TASK 4
   // ---------------------
   // Implement this function which takes a css selector as its only argument.
